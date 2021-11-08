@@ -22,7 +22,7 @@
 ![](images/dev-env.png)
 
 - Create `vagrantfile` in the current location
-'''
+```
 Vagrant.configure("2") do |config|
 
  config.vm.box = "ubuntu/xenial64"
@@ -35,4 +35,4 @@ Vagrant.configure("2") do |config|
  config.hostsupdater.aliases = ["development.local"]
 
 end
-'''
+```
