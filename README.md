@@ -1,5 +1,6 @@
 # DevOps Intro
 ## Life Before DevOps
+- The Waterfall life cycle, which was very hard to return to previous points of to fix things
 - Developers used to make software and give it to Operations and it wouldn't work because environments were different and the only thing Developers could say was "It was working on my machine"
 ### why DevOps
 - **DevOps Introduction**
@@ -17,6 +18,7 @@
 ##### Monolith Architecture
 - Everything works in the same package
 - Bad for agile because you have to finish the entire app before you can deliver anything
+- Fine for small projects but still not great
 
 ### Development Environment
 ![](images/dev-env.png)
@@ -50,13 +52,17 @@ sudo apt install nginx -y
 
 #load nginx on 192.168.10.100
 ```
-
+- Use `sudo chmod +x provision.sh` to make it executable
 - Add the below line into the `vagrantfile` above end, this will run the provision.sh file on use of `vagrant up`
+- It has `run: always` at the end so that it reruns everytime it is reloaded
 
 ```
 # runs the provision file at boot, which updates and upgrades patchs and install nginx in this case
  config.vm.provision :shell, path: "provision.sh", run: 'always'
 ```
+
+- You should then be able to connect on your localhost at `192.168.10.100`
+- If not the `vagrant ssh` into your vm and check nginx status with `systemctl status nginx`
 
 - Vagrant Commands
 
