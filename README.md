@@ -36,6 +36,10 @@ Vagrant.configure("2") do |config|
 # ensure to install hostsupdater plugin on our localhost
  config.hostsupdater.aliases = ["development.local"]
 
+ # Sync folder from OS to VM
+ # "." is current location - to our vm
+  config.vm.synced_folder ".", "/home/vagrant/app"
+
 end
 ```
 - Create `provision.sh`, updates system, upgrades packages and installs nginx
