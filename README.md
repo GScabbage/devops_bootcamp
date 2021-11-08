@@ -36,7 +36,7 @@ Vagrant.configure("2") do |config|
 
 end
 ```
-- Create `provision.sh`
+- Create `provision.sh`, updates system, upgrades packages and installs nginx
 ```
 #!/bin/bash
 # update system
@@ -50,6 +50,14 @@ sudo apt install nginx -y
 
 #load nginx on 192.168.10.100
 ```
+
+- Add the below line into the `vagrantfile` above end, this will run the provision.sh file on use of `vagrant up`
+
+```
+# runs the provision file at boot, which updates and upgrades patchs and install nginx in this case
+ config.vm.provision :shell, path: "provision.sh", run: 'always'
+```
+
 - Vagrant Commands
 
 ```
