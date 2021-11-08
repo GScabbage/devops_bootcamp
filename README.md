@@ -11,10 +11,10 @@
 - An approach through which superior quality software can be developed quickly and with more reliability
 - An alignment of development and IT operations with better communication and collaboration
 #### Key Pillars of DevOps
-- Ease of Use
-- Robustness
-- Cost Effective
-- Flexibility
+- Ease of Use - Can easily return to previous points in development due to its cyclical nature
+- Robustness - Builds designed to be robust so they can be repeatable on any host
+- Cost Effective - Automation reduces cost of projects as set up is faster and mistakes easier to fix
+- Flexibility - Continuous nature allows allows for easy alteration and addition of features
 ##### Monolith Architecture
 - Everything works in the same package
 - Bad for agile because you have to finish the entire app before you can deliver anything
@@ -104,3 +104,7 @@ Common commands:
      winrm-config    outputs WinRM configuration to connect to the machine
 
 ```
+### Links in case things get updates
+
+- [Vagrant Docs on Provisioning](https://www.vagrantup.com/docs/provisioning/file)
+- [Vagrant Docs on Shell](https://www.vagrantup.com/docs/provisioning/shell)
