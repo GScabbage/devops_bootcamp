@@ -21,4 +21,11 @@
 - There will now only be 1 failure left
 - Run `sudo npm install pm2 -g`, this will install pm2 meaning no more failures remain
 ### Final preparations to run the app
-- Inside of your ssh terminal navigate to `/app/app`
+- Inside of your ssh terminal navigate to `/app/app`, if this is not there then make sure the synced folder is in your vagrant file and is correct
+- Once there run the command `npm install`, this will install the relevant packages for the app to run correctly
+- If it has alot of deprecation erros then rerun `sudo apt-get updates -y` and `sudo apt-get upgrade -y`, this should fix it if not it shouldn't affect it running anyway
+- Finally run the command `npm start`, this will start the app
+### Connecting to the app
+- Got to your chosen web browser on your local machine
+- Connect on the ip you gave on port 3000 which should be `192.168.10.100:3000`
+- If this displays the app start page then everything is setup correctly
