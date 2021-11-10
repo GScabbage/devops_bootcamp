@@ -1,19 +1,47 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
 Vagrant.configure("2") do |config|
+  config.vm.define :server do |server|
+    server.vm.box = "ubuntu/xenial64"
+    #server.vm.network "forwarded_port", guest: 3000, host: 3002, auto_correct: true
+    server.vm.network "private_network", ip: "192.168.10.150"
+    server.vm.hostname = "server"
+    server.vm.provision "shell", inline: <<-SHELL
+      # be careful of these keys, they will go out of date
+      sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv D68FA50FEA312927
+      echo "deb https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
 
- config.vm.box = "ubuntu/xenial64"
-# creating a virtual machine ubuntu
+      sudo apt-get update -y
+      sudo apt-get upgrade -y
 
-# assign private ip to our VM
- config.vm.network "private_network", ip: "192.168.10.100"
+      # sudo apt-get install mongodb-org=3.2.20 -y
+      sudo apt-get install -y mongodb-org=3.2.20 mongodb-org-server=3.2.20 mongodb-org-shell=3.2.20 mongodb-org-mongos=3.2.20 mongodb-org-tools=3.2.20
 
-# ensure to install hostsupdater plugin on our localhost
- config.hostsupdater.aliases = ["development.local"]
 
-# Sync folder from OS to VM
-# "." is current location - to our vm
- config.vm.synced_folder ".", "/home/vagrant/app"
+      # if mongo is is set up correctly these will be successful
+      sudo systemctl restart mongod
+      sudo systemctl enable mongod
+    SHELL
+  end
 
-# runs the provision file at boot, which updates and upgrades patchs and install nginx in this case
-# config.vm.provision :shell, path: "provision.sh", run: 'always'
-
+  config.vm.define :webapp do |webapp|
+    webapp.vm.box = "ubuntu/xenial64"
+    #webapp.vm.network "forwarded_port", guest: 3000, host: 3001, auto_correct: true
+    webapp.vm.network "private_network", ip: "192.168.10.100"
+    webapp.vm.hostname = "webapp"
+    webapp.vm.synced_folder ".", "/home/vagrant/app"
+    webapp.vm.provision "shell", inline: <<-SHELL
+      curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+      sudo apt-get update -y
+      sudo apt-get upgrade -y
+      sudo apt install nginx -y
+      sudo apt-get install python-software-properties
+      sudo apt-get install -y nodejs
+      sudo npm install pm2@^3 -g
+      cd app/app
+      npm install
+      #pm2 --name WebApp start npm -- start
+    SHELL
+  end
 end
