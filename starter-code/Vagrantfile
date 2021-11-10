@@ -7,6 +7,7 @@ Vagrant.configure("2") do |config|
     #server.vm.network "forwarded_port", guest: 3000, host: 3002, auto_correct: true
     server.vm.network "private_network", ip: "192.168.10.150"
     server.vm.hostname = "server"
+    server.vm.synced_folder ".", "/home/vagrant/app"
     server.vm.provision "shell", inline: <<-SHELL
       # be careful of these keys, they will go out of date
       sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv D68FA50FEA312927
@@ -18,6 +19,11 @@ Vagrant.configure("2") do |config|
       # sudo apt-get install mongodb-org=3.2.20 -y
       sudo apt-get install -y mongodb-org=3.2.20 mongodb-org-server=3.2.20 mongodb-org-shell=3.2.20 mongodb-org-mongos=3.2.20 mongodb-org-tools=3.2.20
 
+      # change the mongo.conf to allow all connections
+      sudo rm /etc/mongod.conf
+      cd app/environment
+      sudo ln -s mongod.conf /etc/mongod.conf
+      cd
 
       # if mongo is is set up correctly these will be successful
       sudo systemctl restart mongod
@@ -39,9 +45,18 @@ Vagrant.configure("2") do |config|
       sudo apt-get install python-software-properties
       sudo apt-get install -y nodejs
       sudo npm install pm2@^3 -g
+      sudo rm /etc/nginx/sites-available/default
+      sudo echo 'export DB_HOST="mongodb://192.168.10.150:27017/posts"' >> .bashrc
+      source ~/.bashrc
+      printenv DB_HOST
+      sudo cp app/environment/default /etc/nginx/sites-available
+      sudo systemctl restart nginx
+      sudo system enable nginx
+      source app/app/seeds/seed.js
       cd app/app
+      ls
       npm install
-      #pm2 --name WebApp start npm -- start
+      pm2 --name WebApp start npm -- start
     SHELL
   end
 end
