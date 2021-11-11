@@ -19,11 +19,14 @@ Vagrant.configure("2") do |config|
       # sudo apt-get install mongodb-org=3.2.20 -y
       sudo apt-get install -y mongodb-org=3.2.20 mongodb-org-server=3.2.20 mongodb-org-shell=3.2.20 mongodb-org-mongos=3.2.20 mongodb-org-tools=3.2.20
 
+      sudo systemctl restart mongod
+      sudo systemctl enable mongod
+
       # change the mongo.conf to allow all connections
-      sudo rm /etc/mongod.conf
-      cd app/environment
-      sudo ln -s mongod.conf /etc/mongod.conf
-      cd
+      sudo rm -rf /etc/mongod.conf
+      #cd app/environment
+      sudo ln -s /home/vagrant/app/environment/mongod.conf /etc/mongod.conf
+
 
       # if mongo is is set up correctly these will be successful
       sudo systemctl restart mongod
@@ -51,12 +54,12 @@ Vagrant.configure("2") do |config|
       printenv DB_HOST
       sudo cp app/environment/default /etc/nginx/sites-available
       sudo systemctl restart nginx
-      sudo system enable nginx
-      source app/app/seeds/seed.js
+      sudo systemctl enable nginx
+      node app/app/seeds/seed.js
       cd app/app
       ls
       npm install
-      pm2 --name WebApp start npm -- start
+      #pm2 --name WebApp start npm -- start
     SHELL
   end
 end
